@@ -13,3 +13,8 @@ end
 @testset "append_length" begin
   @test append_length("", 2) == "0000000000000000000000000000000000000000000000000000000000000010"
 end
+@testset "rotate" begin
+  @test bits(rotate_shift_left(Int8(1), 1)) == bits(Int8(1) << 1)
+  @test bits(rotate_shift_left(Int8(-1), 1)) == bits(Int8(-1))
+end
+

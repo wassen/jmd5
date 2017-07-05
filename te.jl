@@ -1,5 +1,7 @@
 #! /usr/bin/env julia
 
+# wordA = 
+
 function str2bits(str :: String) :: String
   length(str) != 1 && return
   return bits(str[1])
@@ -15,4 +17,10 @@ end
 
 function append_length(str :: String, i :: Int) :: String
   return "$str$(bits(i))"
+end
+
+# XXX <<<を定義したかった
+# 32bit？
+function rotate_shift_left(x, n)
+  x << n | x >> (bits(x).len - n)
 end
