@@ -1,5 +1,5 @@
 #! /usr/bin/env julia
-include("../te.jl")
+include("../main.jl")
 
 using Base.Test
 @testset "str2bits" begin
