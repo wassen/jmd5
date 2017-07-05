@@ -11,5 +11,5 @@ end
   @test padding(join(fill("0", 447))).len == 448
 end
 @testset "append_length" begin
-  @test append_length("", 2) == "00000000000000000000000000000010"
+  @test append_length("", 2) == "0000000000000000000000000000000000000000000000000000000000000010"
 end
