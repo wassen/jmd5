@@ -27,3 +27,21 @@ end
 function rotate_shift_left(x, n)
   x << n | x >> (bits(x).len - n)
 end
+
+function F(X :: Int, Y :: Int, Z :: Int) :: Int
+  return X & Y | ~X & Z
+end
+
+function G(X :: Int, Y :: Int, Z :: Int) :: Int
+  return X & Z | Y & ~Z
+end
+
+function H(X :: Int, Y :: Int, Z :: Int) :: Int
+  return X $ Y $ Z
+end
+
+function I(X :: Int, Y :: Int, Z :: Int) :: Int
+  return Y $ (X | ~Z)
+end
+
+
