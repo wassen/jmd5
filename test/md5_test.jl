@@ -18,3 +18,11 @@ end
   @test bits(rotate_shift_left(Int8(-1), 1)) == bits(Int8(-1))
 end
 
+@testset "auxiliary functions" begin
+#  @test F()
+#  @test 
+end
+
+@testset "table" begin
+  @test table(1) == 3614090360
+end

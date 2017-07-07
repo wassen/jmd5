@@ -44,4 +44,8 @@ function I(X :: Int, Y :: Int, Z :: Int) :: Int
   return Y $ (X | ~Z)
 end
 
+"1 to 64"
+function table(index :: Int) :: Int
+  return round(Int, 4294967296*abs(sin(index)))
+end
 
