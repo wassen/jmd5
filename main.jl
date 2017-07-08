@@ -1,9 +1,9 @@
 #! /usr/bin/env julia
 
-wordA = "$(bits(0x01))$(bits(0x23))$(bits(0x45))$(bits(0x67))"
-wordB = "$(bits(0x89))$(bits(0xab))$(bits(0xcd))$(bits(0xef))"
-wordC = "$(bits(0xfe))$(bits(0xdc))$(bits(0xba))$(bits(0x98))"
-wordD = "$(bits(0x76))$(bits(0x54))$(bits(0x32))$(bits(0x10))"
+wordA = parse(Int, "$(bits(0x01))$(bits(0x23))$(bits(0x45))$(bits(0x67))", 2)
+wordB = parse(Int, "$(bits(0x89))$(bits(0xab))$(bits(0xcd))$(bits(0xef))", 2)
+wordC = parse(Int, "$(bits(0xfe))$(bits(0xdc))$(bits(0xba))$(bits(0x98))", 2)
+wordD = parse(Int, "$(bits(0x76))$(bits(0x54))$(bits(0x32))$(bits(0x10))", 2)
 
 function str2bits(str :: String) :: String
   length(str) != 1 && return
@@ -48,4 +48,3 @@ end
 function table(index :: Int) :: Int
   return round(Int, 4294967296*abs(sin(index)))
 end
-
