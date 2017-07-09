@@ -26,3 +26,7 @@ end
 @testset "table" begin
   @test table(1) == 3614090360
 end
+
+@testset "table" begin
+  @test md5(1) == 1051957111151 
+end

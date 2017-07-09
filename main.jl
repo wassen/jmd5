@@ -64,6 +64,9 @@ function md5(N)
   # TODO fix to "for" expression
   i = 1
   X = [parse(Int, M[j * 32 - 31:j * 32], 2) for j in 1:16]
-  A = B + rotate_shift_left(A + F_func(B,C,D) + X[1] + table(2), 7)
+  function update(A :: Int, B :: Int, C :: Int, D :: Int, k :: Int, s :: Int, i :: Int)
+    return B + rotate_shift_left(A + F_func(B,C,D) + X[k] + table(i), s)
+  end
+  A = update(A, B, C, D, 1, 7, 2)
   return A
 end
