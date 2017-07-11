@@ -1,9 +1,9 @@
 #! /usr/bin/env julia
 
-wordA = 0x67452301 * 1
-wordB = 0xefcdab89 * 1
-wordC = 0x98badcfe * 1
-wordD = 0x10325476 * 1
+wordA = 0x67452301
+wordB = 0xefcdab89
+wordC = 0x98badcfe
+wordD = 0x10325476
 
 function str2bits(str :: String) :: String
   length(str) != 1 && return ""
@@ -18,35 +18,37 @@ function padding(str :: String) :: String
   return "$str$padding_1$padding_0"
 end
 
-function append_length(str :: String, i :: Int) :: String
+function append_length(str :: String, i :: Int64) :: String
   return "$str$(bits(i))"
 end
 
 # XXX <<<を定義したかった
 # 32bit？
-function rotate_shift_left(x, n)
-  x << n | x >> (bits(x).len - n)
+function rotate_shift_left(x :: UInt32, n :: Int64) :: UInt32
+  return x << n | x >> (bits(x).len - n)
 end
 
-function F_func(X :: Int, Y :: Int, Z :: Int) :: Int
+function F_func(X :: UInt32, Y :: UInt32, Z :: UInt32) :: UInt32
   return X & Y | ~X & Z
 end
 
-function G_func(X :: Int, Y :: Int, Z :: Int) :: Int
+function G_func(X :: UInt32, Y :: UInt32, Z :: UInt32) :: UInt32
   return X & Z | Y & ~Z
 end
 
-function H_func(X :: Int, Y :: Int, Z :: Int) :: Int
+
+function H_func(X :: UInt32, Y :: UInt32, Z :: UInt32) :: UInt32
   return X ⊻ Y ⊻ Z
 end
 
-function I_func(X :: Int, Y :: Int, Z :: Int) :: Int
+
+function I_func(X :: UInt32, Y :: UInt32, Z :: UInt32) :: UInt32
   return Y ⊻ (X | ~Z)
 end
 
 "1 to 64"
-function table(index :: Int) :: Int
-  return round(Int, 4294967296*abs(sin(index)))
+function table(index :: Int) :: UInt32
+  return round(UInt32, 4294967296*abs(sin(index)))
 end
 
 function md5(input :: String)
@@ -62,13 +64,10 @@ function md5(input :: String)
   N = 16
   # TODO fix to "for" expression
   # i = 1
-  X = [parse(Int, M[j * 32 - 31:j * 32], 2) for j in 1:16]
+  X = [parse(UInt32, M[j * 32 - 31:j * 32], 2) for j in 1:16]
   # type of lambda?
-  function update(A :: Int, B :: Int, C :: Int, D :: Int, k :: Int, s :: Int, i :: Int, f)
-    
-    println(bits(f(B, C, D)).len)
-    println(rotate_shift_left(A + f(B,C,D) + X[k] + table(i), s))
-    return B + rotate_shift_left(A + f(B,C,D) + X[k] + table(i), s)
+  function update(A :: UInt32, B :: UInt32, C :: UInt32, D :: UInt32, k :: Int, s :: Int, i :: Int, f) :: UInt32
+    return UInt32(B + rotate_shift_left(A + f(B,C,D) + X[k] + table(i), s))
   end
   val = 0
   # TODO worst solution
@@ -165,8 +164,16 @@ function md5(input :: String)
   B = wordB + B
   C = wordC + C
   D = wordD + D
-  println("$(bits(D))$(bits(C))$(bits(B))$(bits(A))")
-  println("$(bits(A))$(bits(B))$(bits(C))$(bits(D))")
+  # println(A, B, C, D)
+  print(hex(A))
+  print(hex(B))
+  print(hex(C))
+  println(hex(D))
+  print(hex(D))
+  print(hex(C))
+  print(hex(B))
+  println(hex(A))
+  # println(hex(parse(UInt128, "$(bits(D))$(bits(C))$(bits(B))$(bits(A))", 2)))
+  # println(hex(parse(UInt128, "$(bits(A))$(bits(B))$(bits(C))$(bits(D))", 2)))
 end
 
-# 32を超えてもrotateshiftされないじゃん
