@@ -14,8 +14,7 @@ end
   @test append_length("", 2) == "0000000000000000000000000000000000000000000000000000000000000010"
 end
 @testset "rotate" begin
-  @test bits(rotate_shift_left(Int8(1), 1)) == bits(Int8(1) << 1)
-  @test bits(rotate_shift_left(Int8(-1), 1)) == bits(Int8(-1))
+  @test bits(rotate_shift_left(UInt32(1), 1)) == bits(UInt32(1) << 1)
 end
 
 @testset "auxiliary functions" begin
@@ -27,6 +26,6 @@ end
   @test table(1) == 3614090360
 end
 
-@testset "table" begin
-  @test md5(1) == 1051957111151 
-end
+# @testset "table" begin
+#   @test md5(1) == 1051957111151 
+# end

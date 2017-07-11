@@ -48,11 +48,14 @@ end
 
 "1 to 64"
 function table(index :: Int) :: UInt32
-  return round(UInt32, 4294967296*abs(sin(index)))
+  return round(UInt32, 2^32*abs(sin(index)))
 end
 
-function md5(input :: String)
-  input_bits = str2bits(input)
+function md5(input :: Any)
+  # if(typeof(input) == String)
+  # input_bits = str2bits(input)
+  #input_bits = bits(input)
+  input_bits = ""
   b = input_bits.len
   p = padding(input_bits)
   M = append_length(p, b)
@@ -64,7 +67,9 @@ function md5(input :: String)
   N = 16
   # TODO fix to "for" expression
   # i = 1
-  X = [parse(UInt32, M[j * 32 - 31:j * 32], 2) for j in 1:16]
+  # fuck
+  # X = [parse(UInt32, M[j * 32 - 31:j * 32], 2) for j in 1:16]
+  X = [parse(UInt32, M[j * 32 - 7:j * 32]*M[j * 32 - 15:j * 32 - 8]*M[j * 32 - 23:j * 32 - 16]*M[j * 32 - 31:j * 32 - 24], 2) for j in 1:16]
   # type of lambda?
   function update(A :: UInt32, B :: UInt32, C :: UInt32, D :: UInt32, k :: Int, s :: Int, i :: Int, f) :: UInt32
     return UInt32(B + rotate_shift_left(A + f(B,C,D) + X[k] + table(i), s))
@@ -77,7 +82,9 @@ function md5(input :: String)
   s_2 = 12
   s_3 = 17
   s_4 = 22
+  println(X[1])
   A = update(A, B, C, D, 1, s_1, val+=1, f)
+  println(A)
   D = update(D, A, B, C, 2, s_2, val+=1, f)
   C = update(C, D, A, B, 3, s_3, val+=1, f)
   B = update(B, C, D, A, 4, s_4, val+=1, f)
@@ -160,11 +167,12 @@ function md5(input :: String)
   C = update(C, D, A, B, 3, s_3, val+=1, f)
   B = update(B, C, D, A, 10, s_4, val+=1, f)
 
+  #println(hex(A))
+  #println(hex(wordA))
   A = wordA + A
   B = wordB + B
   C = wordC + C
   D = wordD + D
-  # println(A, B, C, D)
   print(hex(A))
   print(hex(B))
   print(hex(C))
@@ -176,4 +184,3 @@ function md5(input :: String)
   # println(hex(parse(UInt128, "$(bits(D))$(bits(C))$(bits(B))$(bits(A))", 2)))
   # println(hex(parse(UInt128, "$(bits(A))$(bits(B))$(bits(C))$(bits(D))", 2)))
 end
-
