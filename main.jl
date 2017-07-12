@@ -48,7 +48,7 @@ end
 
 "1 to 64"
 function table(index :: Int) :: UInt32
-  return round(UInt32, 2^32*abs(sin(index)))
+  return floor(UInt32, 2^32*abs(sin(BigInt(index))))
 end
 
 function md5(input :: Any)
@@ -82,9 +82,7 @@ function md5(input :: Any)
   s_2 = 12
   s_3 = 17
   s_4 = 22
-  println(X[1])
   A = update(A, B, C, D, 1, s_1, val+=1, f)
-  println(A)
   D = update(D, A, B, C, 2, s_2, val+=1, f)
   C = update(C, D, A, B, 3, s_3, val+=1, f)
   B = update(B, C, D, A, 4, s_4, val+=1, f)
@@ -167,12 +165,17 @@ function md5(input :: Any)
   C = update(C, D, A, B, 3, s_3, val+=1, f)
   B = update(B, C, D, A, 10, s_4, val+=1, f)
 
-  #println(hex(A))
-  #println(hex(wordA))
+  # 加算で増えるから& 0xffffffffするか% 0xffffffffするか
   A = wordA + A
   B = wordB + B
   C = wordC + C
   D = wordD + D
+  println("A:$(bits(A))")
+  println("B:$(bits(B))")
+  println("C:$(bits(C))")
+  println("D:$(bits(D))")
+
+
   print(hex(A))
   print(hex(B))
   print(hex(C))
