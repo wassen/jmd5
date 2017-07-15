@@ -6,8 +6,7 @@ wordC = 0x98badcfe
 wordD = 0x10325476
 
 function str2bits(str :: String) :: String
-  length(str) != 1 && return ""
-  return bits(str[1])
+  return join([bin(s, 8) for s in str])
 end
 
 # XXX 現状のやつでは512-64バイト以上のものに対応できない
@@ -19,7 +18,8 @@ function padding(str :: String) :: String
 end
 
 function append_length(str :: String, i :: Int64) :: String
-  return "$str$(bits(i))"
+  bitss = join(reverse([bits(i)[j*8-7:j*8] for j in 1:8]))
+  return "$str$(bitss)"
 end
 
 # XXX <<<を定義したかった
@@ -51,14 +51,21 @@ function table(index :: Int) :: UInt32
   return floor(UInt32, 2^32*abs(sin(BigInt(index))))
 end
 
-function md5(input :: Any)
-  # if(typeof(input) == String)
-  # input_bits = str2bits(input)
-  #input_bits = bits(input)
-  input_bits = ""
+function md5(input :: String)
+  if(typeof(input) == String)
+    input_bits = str2bits(input)
+  else
+    input_bits = "01100001"
+  end
   b = input_bits.len
+  print(b)
   p = padding(input_bits)
   M = append_length(p, b)
+  # M = join(fill("0", 16))*"1000000001100001"*join(fill("0", 32*13))*"00000000000000000000000000001000"*join(fill("0", 32))
+  # M = "00000000000000000000000000001000"*join(fill("0", 32*13))*join(fill("0", 32))*join(fill("0", 16))*"1000000001100001"
+  # M="0110000110000000"*join(fill("0",16))*join(fill("0",32*13))*"0000100000000000"*join(fill("0", 16))*join(fill("0", 32))
+  println(M)
+  println(M.len)
   A = wordA
   B = wordB
   C = wordC
@@ -82,6 +89,7 @@ function md5(input :: Any)
   s_2 = 12
   s_3 = 17
   s_4 = 22
+  println(X)
   A = update(A, B, C, D, 1, s_1, val+=1, f)
   D = update(D, A, B, C, 2, s_2, val+=1, f)
   C = update(C, D, A, B, 3, s_3, val+=1, f)
